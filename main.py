@@ -23,8 +23,13 @@ class Cell:
     def get_color(self):
         if self.original:
             return line_color
-        if self.num == 0:
-            # return bg_color
+        if self.num == 0 and self.hovered and self.selected:
+            return (0, 0, 127)
+        if self.num == 0 and self.hovered and not self.selected:
+            return (0, 127, 0)
+        if self.num == 0 and not self.hovered and self.selected:
+            return (127, 0, 0)
+        if self.num == 0 and not self.hovered and not self.selected:
             return (127, 127, 127)
         if self.hovered and self.selected:
             return (255, 0, 0)
@@ -72,6 +77,12 @@ def _draw_numbers(board, display):
     return cells
 
 
+def _select_cell(x, y):
+    lin, col = (x - scr_pad) // cell_length, (y - scr_pad) // cell_length
+    print(f"Selected cell is ({lin},{col})")
+    return lin, col
+
+
 cell_length = 60
 scr_pad = 30
 scr_length = scr_pad * 2 + cell_length * 9
@@ -88,7 +99,8 @@ number_font = pg.font.SysFont(font, font_size)
 pg.display.set_caption("Sudoku")
 _draw_grid_lines(display=display)
 board = _get_board()
-_draw_numbers(board=board, display=display)
+cells = _draw_numbers(board=board, display=display)
+selected_cell = None
 run = True
 while run:
     for event in pg.event.get():
@@ -96,5 +108,24 @@ while run:
             event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE
         ):
             run = False
+        elif event.type == pg.MOUSEBUTTONUP:
+            m_x, m_y = pg.mouse.get_pos()
+            if (scr_pad < m_x < scr_length - scr_pad) and (
+                scr_pad < m_y < scr_length - scr_pad
+            ):
+                if selected_cell:
+                    lin, col = selected_cell
+                    cell = cells[9 * col + lin]
+                    cell.selected = False
+                lin, col = _select_cell(m_x, m_y)
+                cell = cells[9 * col + lin]
+                cell.selected = True
+                selected_cell = (lin, col)
+        for cell in cells:
+            if cell.rect.collidepoint(pg.mouse.get_pos()):
+                cell.hovered = True
+            else:
+                cell.hovered = False
+            cell.draw()
     pg.display.update()
 pg.quit()
