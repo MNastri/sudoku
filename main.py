@@ -114,13 +114,10 @@ while run:
                 scr_pad < m_y < scr_length - scr_pad
             ):
                 if selected_cell:
-                    lin, col = selected_cell
-                    cell = cells[9 * col + lin]
-                    cell.selected = False
+                    selected_cell.selected = False
                 lin, col = _select_cell(m_x, m_y)
-                cell = cells[9 * col + lin]
-                cell.selected = True
-                selected_cell = (lin, col)
+                selected_cell = cells[9 * col + lin]
+                selected_cell.selected = True
         for cell in cells:
             if cell.rect.collidepoint(pg.mouse.get_pos()):
                 cell.hovered = True
