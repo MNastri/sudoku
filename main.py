@@ -1,6 +1,27 @@
 import pygame as pg
 import requests
 
+from pygame import (
+    K_1,
+    K_2,
+    K_3,
+    K_4,
+    K_5,
+    K_6,
+    K_7,
+    K_8,
+    K_9,
+    K_KP1,
+    K_KP2,
+    K_KP3,
+    K_KP4,
+    K_KP5,
+    K_KP6,
+    K_KP7,
+    K_KP8,
+    K_KP9,
+)
+
 
 class Cell:
     def __init__(self, pos, num, display):
@@ -92,6 +113,27 @@ font_size = cell_length
 bg_color = (20, 20, 20)
 font = "Garamond"
 
+key_numbers = [
+    K_1,
+    K_2,
+    K_3,
+    K_4,
+    K_5,
+    K_6,
+    K_7,
+    K_8,
+    K_9,
+    K_KP1,
+    K_KP2,
+    K_KP3,
+    K_KP4,
+    K_KP5,
+    K_KP6,
+    K_KP7,
+    K_KP8,
+    K_KP9,
+]
+
 pg.init()
 display = pg.display.set_mode((scr_length, scr_length))
 display.fill(bg_color)
@@ -118,6 +160,10 @@ while run:
                 lin, col = _select_cell(m_x, m_y)
                 selected_cell = cells[9 * col + lin]
                 selected_cell.selected = True
+        elif event.type == pg.KEYDOWN and event.key in key_numbers:
+            if selected_cell:
+                selected_cell.num = key_numbers.index(event.key) % 9 + 1
+                selected_cell.draw()
         for cell in cells:
             if cell.rect.collidepoint(pg.mouse.get_pos()):
                 cell.hovered = True
