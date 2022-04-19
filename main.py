@@ -70,6 +70,19 @@ class Cell:
             )
         )
 
+    def clear_cell(self):
+        self.rend = number_font.render(str(self.num), True, bg_color)
+        self.display.blit(self.rend, self.rect)
+
+    def remove_num(self):
+        self.clear_cell()
+        self.num = 0
+
+    def set_num(self, num):
+        self.remove_num()
+        self.num = num
+        self.draw()
+
 
 def _draw_grid_lines(display):
     for ii in range(10):
@@ -164,13 +177,9 @@ while run:
                 selected_cell.selected = True
         elif event.type == pg.KEYDOWN and event.key in key_numbers:
             if selected_cell:
-                selected_cell.num = key_numbers.index(event.key) % 9 + 1
-                selected_cell.draw()
+                selected_cell.set_num(key_numbers.index(event.key) % 9 + 1)
         for cell in cells:
-            if cell.rect.collidepoint(pg.mouse.get_pos()):
-                cell.hovered = True
-            else:
-                cell.hovered = False
+            cell.clear_cell()
             cell.draw()
     pg.display.update()
 pg.quit()
