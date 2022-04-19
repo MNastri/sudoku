@@ -43,9 +43,11 @@ scr_length = scr_pad * 2 + cell_length * 9
 line_color = (255, 255, 255)
 number_color = (0, 0, 200)
 font_size = cell_length
+bg_color = (10, 10, 10)
 
 pg.init()
 display = pg.display.set_mode((scr_length, scr_length))
+display.fill(bg_color)
 number_font = pg.font.SysFont("Garamond", font_size)
 pg.display.set_caption("Sudoku")
 _draw_grid_lines(display=display)
