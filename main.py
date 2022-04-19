@@ -29,6 +29,7 @@ line_color = (255, 255, 255)
 
 pg.init()
 display = pg.display.set_mode((scr_length, scr_length))
+pg.display.set_caption("Sudoku")
 _draw_grid_lines(display=display)
 board = _get_board()
 run = True
