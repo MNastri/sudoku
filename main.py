@@ -23,8 +23,8 @@ def _get_board():
 
 
 def _draw_numbers(board, font, display):
-    for line_num,line in enumerate(board):
-        for column_num,num in enumerate(line):
+    for line_num, line in enumerate(board):
+        for column_num, num in enumerate(line):
             if num == 0:
                 continue
             img = font.render(str(num), True, number_color)
@@ -42,7 +42,7 @@ scr_pad = 30
 scr_length = scr_pad * 2 + cell_length * 9
 line_color = (255, 255, 255)
 number_color = (0, 0, 200)
-font_size = 30
+font_size = cell_length
 
 pg.init()
 display = pg.display.set_mode((scr_length, scr_length))
