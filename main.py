@@ -63,19 +63,13 @@ def _get_board():
     return response.json()["board"]
 
 
-def _draw_numbers(board, font, display):
+def _draw_numbers(board, display):
+    cells = []
     for line_num, line in enumerate(board):
         for column_num, num in enumerate(line):
-            if num == 0:
-                continue
-            img = font.render(str(num), True, number_color)
-            img_rect = img.get_rect(
-                center=(
-                    scr_pad + column_num * cell_length + cell_length // 2,
-                    scr_pad + line_num * cell_length + cell_length // 2,
-                )
-            )
-            display.blit(img, img_rect)
+            cell = Cell((line_num, column_num), num, display)
+            cells.append(cell)
+    return cells
 
 
 cell_length = 60
@@ -94,7 +88,7 @@ number_font = pg.font.SysFont(font, font_size)
 pg.display.set_caption("Sudoku")
 _draw_grid_lines(display=display)
 board = _get_board()
-_draw_numbers(board=board, font=number_font, display=display)
+_draw_numbers(board=board, display=display)
 run = True
 while run:
     for event in pg.event.get():
