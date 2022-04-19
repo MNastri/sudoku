@@ -1,5 +1,3 @@
-import time
-
 import pygame as pg
 
 
@@ -22,7 +20,7 @@ def _draw_grid_lines(display):
         )
 
 
-cell_side_length = 30
+cell_side_length = 60
 screen_pad = 30
 screen_side_length = screen_pad * 2 + cell_side_length * 9
 line_color = (255, 255, 255)
@@ -30,6 +28,12 @@ line_color = (255, 255, 255)
 pg.init()
 display = pg.display.set_mode((screen_side_length, screen_side_length))
 _draw_grid_lines(display=display)
-pg.display.update()
-time.sleep(4)
+run = True
+while run:
+    for event in pg.event.get():
+        if event.type == pg.QUIT or (
+            event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE
+        ):
+            run = False
+    pg.display.update()
 pg.quit()
