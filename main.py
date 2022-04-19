@@ -4,20 +4,15 @@ import requests
 
 def _draw_grid_lines(display):
     for ii in range(10):
+        wdt = 4 if ii % 3 == 0 else 2
         start = end = scr_pad + ii * cell_length
         # Horizontal lines
         pg.draw.line(
-            display,
-            line_color,
-            (scr_pad, start),
-            (scr_length - scr_pad, end),
+            display, line_color, (scr_pad, start), (scr_length - scr_pad, end), wdt
         )
         # Vertical lines
         pg.draw.line(
-            display,
-            line_color,
-            (start, scr_pad),
-            (end, scr_length - scr_pad),
+            display, line_color, (start, scr_pad), (end, scr_length - scr_pad), wdt
         )
 
 
