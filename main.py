@@ -58,6 +58,8 @@ class Cell:
             return (0, 255, 0)
         if not self.hovered and self.selected:
             return (0, 0, 255)
+        if not self.hovered and not self.selected:
+            return number_color
 
     def set_rect(self):
         self.set_rend()
