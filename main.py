@@ -26,7 +26,7 @@ from pygame import (
 class Cell:
     def __init__(self, pos, num, display, font):
         self.original = num != 0
-        self.hovered = False
+        self.hovered = False  # TODO
         self.selected = False
         self.pos = pos
         self.num = num
@@ -46,21 +46,21 @@ class Cell:
         if self.original:
             return line_color
         if self.num == 0 and self.hovered and self.selected:
-            return (0, 0, 127)
+            return empty_cell_hov_sel_color
         if self.num == 0 and self.hovered and not self.selected:
-            return (0, 127, 0)
+            return empty_cell_hov_unsel_color
         if self.num == 0 and not self.hovered and self.selected:
-            return (127, 0, 0)
+            return empty_cell_unhov_sel_color
         if self.num == 0 and not self.hovered and not self.selected:
-            return (127, 127, 127)
+            return empty_cell_unhov_unsel_color
         if self.hovered and self.selected:
-            return (255, 0, 0)
+            return filled_cell_hov_sel_color
         if self.hovered and not self.selected:
-            return (0, 255, 0)
+            return filled_cell_hov_unsel_color
         if not self.hovered and self.selected:
-            return (0, 0, 255)
+            return filled_cell_unhov_sel_color
         if not self.hovered and not self.selected:
-            return number_color
+            return filled_cell_unhov_unsel_color
 
     def set_rect(self):
         self.set_rend()
@@ -152,9 +152,17 @@ scr_pad = 30
 scr_length = scr_pad * 2 + cell_length * 9
 line_color = (255, 255, 255)
 number_color = (0, 0, 200)
-font_size = cell_length
 bg_color = (20, 20, 20)
+empty_cell_hov_sel_color = (0, 0, 127)
+empty_cell_hov_unsel_color = (0, 127, 0)
+empty_cell_unhov_sel_color = (127, 0, 0)
+empty_cell_unhov_unsel_color = (127, 127, 127)
+filled_cell_hov_sel_color = (255, 0, 0)
+filled_cell_hov_unsel_color = (0, 255, 0)
+filled_cell_unhov_sel_color = (0, 0, 255)
+filled_cell_unhov_unsel_color = number_color
 font = "Garamond"
+font_size = cell_length
 
 key_numbers = [
     K_1,
