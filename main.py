@@ -1,3 +1,6 @@
+from collections import namedtuple
+from enum import Enum
+
 import pygame as pg
 import requests
 
@@ -21,9 +24,15 @@ from pygame import (
     K_KP8,
     K_KP9,
 )
-from collections import namedtuple
 
 Position = namedtuple("Position", ["line", "column"])
+
+
+class Difficulty(Enum):
+    EASY = "easy"
+    MEDIUM = "medium"
+    HARD = "hard"
+    RANDOM = "random"
 
 
 class Cell:
@@ -144,8 +153,8 @@ class Board:
             cell.draw()
 
 
-def _get_board(difficulty):
-    uri = f"https://sugoku.herokuapp.com/board?difficulty={difficulty}"
+def _get_board(difficulty: Difficulty):
+    uri = f"https://sugoku.herokuapp.com/board?difficulty={difficulty.value}"
     response = requests.get(uri)
     return response.json()["board"]
 
@@ -197,7 +206,7 @@ display = pg.display.set_mode((scr_length, scr_length))
 display.fill(bg_color)
 number_font = pg.font.SysFont(font, font_size)
 pg.display.set_caption("Sudoku")
-downloaded_board = _get_board(difficulty="hard")
+downloaded_board = _get_board(difficulty=Difficulty.HARD)
 board = Board(board_cells=downloaded_board, display=display)
 board.draw_grid_lines()
 run = True
