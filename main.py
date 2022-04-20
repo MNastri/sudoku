@@ -21,6 +21,9 @@ from pygame import (
     K_KP8,
     K_KP9,
 )
+from collections import namedtuple
+
+Position = namedtuple("Position", ["line", "column"])
 
 
 class Cell:
@@ -28,7 +31,7 @@ class Cell:
         self.original = num != 0
         self.hovered = False  # TODO
         self.selected = False
-        self.pos = pos
+        self.pos = Position(pos[0], pos[1])
         self.num = num
         self.display = display
         self.font = font
@@ -66,8 +69,8 @@ class Cell:
         self.set_rend()
         self.rect = self.rend.get_rect(
             center=(
-                scr_pad + self.pos[1] * cell_length + cell_length // 2,
-                scr_pad + self.pos[0] * cell_length + cell_length // 2,
+                scr_pad + self.pos.column * cell_length + cell_length // 2,
+                scr_pad + self.pos.line * cell_length + cell_length // 2,
             )
         )
 
