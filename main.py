@@ -84,18 +84,60 @@ class Cell:
         self.draw()
 
 
-def _draw_grid_lines(display):
-    for ii in range(10):
-        wdt = 4 if ii % 3 == 0 else 2
-        start = end = scr_pad + ii * cell_length
-        # Horizontal lines
-        pg.draw.line(
-            display, line_color, (scr_pad, start), (scr_length - scr_pad, end), wdt
-        )
-        # Vertical lines
-        pg.draw.line(
-            display, line_color, (start, scr_pad), (end, scr_length - scr_pad), wdt
-        )
+class Board:
+    def __init__(self, board_cells, display):
+        self.display = display
+        self.cells = self.get_cells(board_cells=board_cells)
+        self.selected_cell = None
+
+    def draw_grid_lines(self):
+        for ii in range(10):
+            wdt = 4 if ii % 3 == 0 else 2
+            start = end = scr_pad + ii * cell_length
+            # Horizontal line
+            pg.draw.line(
+                self.display,
+                line_color,
+                (scr_pad, start),
+                (scr_length - scr_pad, end),
+                wdt,
+            )
+            # Vertical line
+            pg.draw.line(
+                self.display,
+                line_color,
+                (start, scr_pad),
+                (end, scr_length - scr_pad),
+                wdt,
+            )
+
+    def get_cells(self, board_cells):
+        cells = []
+        for line_num, line in enumerate(board_cells):
+            for col_num, num in enumerate(line):
+                cell = Cell((line_num, col_num), num, self.display)
+                cells.append(cell)
+        return cells
+
+    def mouse_click(self, mx, my):
+        if self.selected_cell:
+            self.selected_cell.selected = False
+        lin, col = (my - scr_pad) // cell_length, (mx - scr_pad) // cell_length
+        self.selected_cell = self.cells[9 * lin + col]
+        self.selected_cell.selected = True
+
+    def set_num(self, num):
+        if self.selected_cell and not self.selected_cell.original:
+            self.selected_cell.set_num(num=num)
+
+    def remove_num(self):
+        if self.selected_cell and not self.selected_cell.original:
+            self.selected_cell.remove_num()
+
+    def update(self):
+        for cell in self.cells:
+            cell.clear_cell()
+            cell.draw()
 
 
 def _get_board():
@@ -154,10 +196,10 @@ display = pg.display.set_mode((scr_length, scr_length))
 display.fill(bg_color)
 number_font = pg.font.SysFont(font, font_size)
 pg.display.set_caption("Sudoku")
-_draw_grid_lines(display=display)
-board = _get_board()
-cells = _draw_numbers(board=board, display=display)
-selected_cell = None
+downloaded_board = _get_board()
+board = Board(board_cells=downloaded_board, display=display)
+board.draw_grid_lines()
+
 run = True
 while run:
     for event in pg.event.get():
@@ -170,16 +212,14 @@ while run:
             if (scr_pad < m_x < scr_length - scr_pad) and (
                 scr_pad < m_y < scr_length - scr_pad
             ):
-                if selected_cell:
-                    selected_cell.selected = False
-                lin, col = _select_cell(m_x, m_y)
-                selected_cell = cells[9 * col + lin]
-                selected_cell.selected = True
+                board.mouse_click(mx=m_x, my=m_y)
         elif event.type == pg.KEYDOWN and event.key in key_numbers:
-            if selected_cell:
-                selected_cell.set_num(key_numbers.index(event.key) % 9 + 1)
-        for cell in cells:
-            cell.clear_cell()
-            cell.draw()
+            num = key_numbers.index(event.key) % 9 + 1
+            board.set_num(num=num)
+        elif event.type == pg.KEYDOWN and (
+            event.key == pg.K_0 or event.key == pg.K_KP0 or event.key == pg.K_DELETE
+        ):
+            board.remove_num()
+        board.update()
     pg.display.update()
 pg.quit()
