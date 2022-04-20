@@ -24,13 +24,14 @@ from pygame import (
 
 
 class Cell:
-    def __init__(self, pos, num, display):
+    def __init__(self, pos, num, display, font):
         self.original = num != 0
         self.hovered = False
         self.selected = False
         self.pos = pos
         self.num = num
         self.display = display
+        self.font = font
         self.set_rect()
         self.draw()
 
@@ -39,7 +40,7 @@ class Cell:
         self.display.blit(self.rend, self.rect)
 
     def set_rend(self):
-        self.rend = number_font.render(str(self.num), True, self.get_color())
+        self.rend = self.font.render(str(self.num), True, self.get_color())
 
     def get_color(self):
         if self.original:
@@ -115,7 +116,7 @@ class Board:
         cells = []
         for line_num, line in enumerate(board_cells):
             for col_num, num in enumerate(line):
-                cell = Cell((line_num, col_num), num, self.display)
+                cell = Cell((line_num, col_num), num, self.display, number_font)
                 cells.append(cell)
         return cells
 
