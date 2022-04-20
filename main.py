@@ -141,8 +141,8 @@ class Board:
             cell.draw()
 
 
-def _get_board():
-    uri = "https://sugoku.herokuapp.com/board?difficulty=easy"
+def _get_board(difficulty):
+    uri = f"https://sugoku.herokuapp.com/board?difficulty={difficulty}"
     response = requests.get(uri)
     return response.json()["board"]
 
@@ -159,7 +159,7 @@ empty_cell_unhov_sel_color = (0, 0, 127)
 filled_cell_unhov_unsel_color = number_color
 filled_cell_unhov_sel_color = (0, 0, 255)
 
-#TODO
+# TODO
 empty_cell_hov_unsel_color = (63, 0, 0)
 empty_cell_hov_sel_color = (127, 0, 0)
 filled_cell_hov_unsel_color = (192, 0, 0)
@@ -194,7 +194,7 @@ display = pg.display.set_mode((scr_length, scr_length))
 display.fill(bg_color)
 number_font = pg.font.SysFont(font, font_size)
 pg.display.set_caption("Sudoku")
-downloaded_board = _get_board()
+downloaded_board = _get_board(difficulty="hard")
 board = Board(board_cells=downloaded_board, display=display)
 board.draw_grid_lines()
 run = True
