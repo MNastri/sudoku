@@ -151,16 +151,20 @@ cell_length = 60
 scr_pad = 30
 scr_length = scr_pad * 2 + cell_length * 9
 line_color = (255, 255, 255)
-number_color = (0, 0, 200)
-bg_color = (20, 20, 20)
-empty_cell_hov_sel_color = (0, 0, 127)
-empty_cell_hov_unsel_color = (0, 127, 0)
-empty_cell_unhov_sel_color = (127, 0, 0)
-empty_cell_unhov_unsel_color = (127, 127, 127)
-filled_cell_hov_sel_color = (255, 0, 0)
-filled_cell_hov_unsel_color = (0, 255, 0)
-filled_cell_unhov_sel_color = (0, 0, 255)
+number_color = (127, 127, 127)
+bg_color = (30, 30, 30)
+
+empty_cell_unhov_unsel_color = bg_color
+empty_cell_unhov_sel_color = (0, 0, 127)
 filled_cell_unhov_unsel_color = number_color
+filled_cell_unhov_sel_color = (0, 0, 255)
+
+#TODO
+empty_cell_hov_unsel_color = (63, 0, 0)
+empty_cell_hov_sel_color = (127, 0, 0)
+filled_cell_hov_unsel_color = (192, 0, 0)
+filled_cell_hov_sel_color = (255, 0, 0)
+
 font = "Garamond"
 font_size = cell_length
 
