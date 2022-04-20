@@ -146,21 +146,6 @@ def _get_board():
     return response.json()["board"]
 
 
-def _draw_numbers(board, display):
-    cells = []
-    for line_num, line in enumerate(board):
-        for column_num, num in enumerate(line):
-            cell = Cell((line_num, column_num), num, display)
-            cells.append(cell)
-    return cells
-
-
-def _select_cell(x, y):
-    lin, col = (x - scr_pad) // cell_length, (y - scr_pad) // cell_length
-    print(f"Selected cell is ({lin},{col})")
-    return lin, col
-
-
 cell_length = 60
 scr_pad = 30
 scr_length = scr_pad * 2 + cell_length * 9
@@ -199,7 +184,6 @@ pg.display.set_caption("Sudoku")
 downloaded_board = _get_board()
 board = Board(board_cells=downloaded_board, display=display)
 board.draw_grid_lines()
-
 run = True
 while run:
     for event in pg.event.get():
