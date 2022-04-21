@@ -98,9 +98,10 @@ class Cell:
 
 
 class Board:
-    def __init__(self, board_cells, display):
-        self.display = display
+    def __init__(self, board_cells, solution, display):
         self.cells = self.get_cells(board_cells=board_cells)
+        self.solution = solution
+        self.display = display
         self.selected_cell = None
 
     def draw_grid_lines(self):
@@ -159,6 +160,13 @@ def _get_board(difficulty: Difficulty):
     return response.json()["board"]
 
 
+def _get_solution(board):
+    payload = {"board": board}
+    uri = "https://sugoku.herokuapp.com/solve"
+    response = requests.post(uri, data=payload)
+    return response.json()["solution"]
+
+
 cell_length = 60
 scr_pad = 30
 scr_length = scr_pad * 2 + cell_length * 9
@@ -208,7 +216,8 @@ try:
     number_font = pg.font.SysFont(font, font_size)
     pg.display.set_caption("Sudoku")
     downloaded_board = _get_board(difficulty=Difficulty.HARD)
-    board = Board(board_cells=downloaded_board, display=display)
+    solution = _get_solution(board=downloaded_board)
+    board = Board(board_cells=downloaded_board, solution=solution, display=display)
     board.draw_grid_lines()
     run = True
     while run:
