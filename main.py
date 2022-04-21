@@ -25,6 +25,7 @@ from pygame import (
     K_KP9,
 )
 
+Location = namedtuple("Location", ["x", "y"])
 Position = namedtuple("Position", ["line", "column"])
 
 
@@ -99,9 +100,9 @@ class Cell:
 
 class Board:
     def __init__(self, board_cells, solution, display):
+        self.display = display
         self.cells = self.get_cells(board_cells=board_cells)
         self.solution = solution
-        self.display = display
         self.selected_cell = None
 
     def draw_grid_lines(self):
@@ -168,7 +169,7 @@ def _get_solution(board):
 
 
 cell_length = 60
-scr_pad = 30
+scr_pad = 90
 scr_length = scr_pad * 2 + cell_length * 9
 line_color = (255, 255, 255)
 number_color = (127, 127, 127)
@@ -209,12 +210,67 @@ key_numbers = [
     K_KP9,
 ]
 
+
+class Checkbox:
+    def __init__(
+        self,
+        display,
+        pos,
+        font,
+        checked=False,
+        caption="",
+        color=(127, 127, 127),
+        checked_color=(0, 127, 0),
+        font_size=font_size,
+    ):
+        self.display = display
+        self.pos = Location(pos[0], pos[1])
+        self.font = font
+        self.checked = checked
+        self.caption = caption
+        self.color = color
+        self.checked_color = checked_color
+        self.font_size = font_size
+        self.set_rect()
+        self.draw()
+
+    def draw(self):
+        self.set_rend()
+        self.display.blit(self.rend, self.rect)
+
+    def set_rend(self):
+        self.rend = self.font.render(self.caption, True, self.get_color())
+
+    def get_color(self):
+        return self.checked_color if self.checked else self.color
+
+    def set_rect(self):
+        self.set_rend()
+        self.rect = self.rend.get_rect(topleft=(self.pos.x, self.pos.y))
+
+    def hide_checkbox(self):
+        self.rend = self.font.render(self.caption, True, bg_color)
+        self.display.blit(self.rend, self.rect)
+
+    def toggle_checkbox(self):
+        self.checked = not self.checked
+        self.hide_checkbox()
+        self.draw()
+
+
 pg.init()
 try:
     display = pg.display.set_mode((scr_length, scr_length))
     display.fill(bg_color)
     number_font = pg.font.SysFont(font, font_size)
     pg.display.set_caption("Sudoku")
+    checkbox = Checkbox(
+        display=display,
+        pos=(10, 10),
+        font=number_font,
+        checked=False,
+        caption="corrigir",
+    )
     downloaded_board = _get_board(difficulty=Difficulty.HARD)
     solution = _get_solution(board=downloaded_board)
     board = Board(board_cells=downloaded_board, solution=solution, display=display)
