@@ -84,7 +84,7 @@ class Cell:
         )
 
     def clear_cell(self):
-        self.rend = number_font.render(str(self.num), True, bg_color)
+        self.rend = self.font.render(str(self.num), True, bg_color)
         self.display.blit(self.rend, self.rect)
 
     def remove_num(self):
