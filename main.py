@@ -202,33 +202,35 @@ key_numbers = [
 ]
 
 pg.init()
-display = pg.display.set_mode((scr_length, scr_length))
-display.fill(bg_color)
-number_font = pg.font.SysFont(font, font_size)
-pg.display.set_caption("Sudoku")
-downloaded_board = _get_board(difficulty=Difficulty.HARD)
-board = Board(board_cells=downloaded_board, display=display)
-board.draw_grid_lines()
-run = True
-while run:
-    for event in pg.event.get():
-        if event.type == pg.QUIT or (
-            event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE
-        ):
-            run = False
-        elif event.type == pg.MOUSEBUTTONUP:
-            m_x, m_y = pg.mouse.get_pos()
-            if (scr_pad < m_x < scr_length - scr_pad) and (
-                scr_pad < m_y < scr_length - scr_pad
+try:
+    display = pg.display.set_mode((scr_length, scr_length))
+    display.fill(bg_color)
+    number_font = pg.font.SysFont(font, font_size)
+    pg.display.set_caption("Sudoku")
+    downloaded_board = _get_board(difficulty=Difficulty.HARD)
+    board = Board(board_cells=downloaded_board, display=display)
+    board.draw_grid_lines()
+    run = True
+    while run:
+        for event in pg.event.get():
+            if event.type == pg.QUIT or (
+                event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE
             ):
-                board.mouse_click(mx=m_x, my=m_y)
-        elif event.type == pg.KEYDOWN and event.key in key_numbers:
-            num = key_numbers.index(event.key) % 9 + 1
-            board.set_num(num=num)
-        elif event.type == pg.KEYDOWN and (
-            event.key == pg.K_0 or event.key == pg.K_KP0 or event.key == pg.K_DELETE
-        ):
-            board.remove_num()
-        board.update()
-    pg.display.update()
-pg.quit()
+                run = False
+            elif event.type == pg.MOUSEBUTTONUP:
+                m_x, m_y = pg.mouse.get_pos()
+                if (scr_pad < m_x < scr_length - scr_pad) and (
+                    scr_pad < m_y < scr_length - scr_pad
+                ):
+                    board.mouse_click(mx=m_x, my=m_y)
+            elif event.type == pg.KEYDOWN and event.key in key_numbers:
+                num = key_numbers.index(event.key) % 9 + 1
+                board.set_num(num=num)
+            elif event.type == pg.KEYDOWN and (
+                event.key == pg.K_0 or event.key == pg.K_KP0 or event.key == pg.K_DELETE
+            ):
+                board.remove_num()
+            board.update()
+        pg.display.update()
+finally:
+    pg.quit()
