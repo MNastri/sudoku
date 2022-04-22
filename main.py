@@ -169,7 +169,7 @@ def _get_solution(board):
 
 
 cell_length = 60
-scr_pad = 90
+scr_pad = 60
 scr_length = scr_pad * 2 + cell_length * 9
 line_color = (255, 255, 255)
 number_color = (127, 127, 127)
@@ -187,7 +187,8 @@ filled_cell_hov_unsel_color = (192, 0, 0)
 filled_cell_hov_sel_color = (255, 0, 0)
 
 font = "Garamond"
-font_size = cell_length
+number_font_size = cell_length
+text_font_size = cell_length // 2
 
 key_numbers = [
     K_1,
@@ -263,12 +264,13 @@ pg.init()
 try:
     display = pg.display.set_mode((scr_length, scr_length))
     display.fill(bg_color)
-    number_font = pg.font.SysFont(font, font_size)
+    number_font = pg.font.SysFont(font, number_font_size)
+    text_font = pg.font.SysFont(font, text_font_size)
     pg.display.set_caption("Sudoku")
     checkbox = Checkbox(
         display=display,
         pos=(10, 10),
-        font=number_font,
+        font=text_font,
         checked=False,
         caption="corrigir",
     )
