@@ -250,13 +250,13 @@ class Checkbox:
         self.set_rend()
         self.rect = self.rend.get_rect(topleft=(self.pos.x, self.pos.y))
 
-    def hide_checkbox(self):
+    def undraw_checkbox(self):
         self.rend = self.font.render(self.caption, True, bg_color)
         self.display.blit(self.rend, self.rect)
 
     def toggle_checkbox(self):
         self.checked = not self.checked
-        self.hide_checkbox()
+        self.undraw_checkbox()
         self.draw()
 
 
