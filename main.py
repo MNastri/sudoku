@@ -232,6 +232,7 @@ class Checkbox:
         self.checked_color = checked_color
         self.font_size = font_size
         self.set_rect()
+        _, _, self.width, self.height = self.rect
         self.draw()
 
     def draw(self):
@@ -288,6 +289,11 @@ try:
                     scr_pad < m_y < scr_length - scr_pad
                 ):
                     board.mouse_click(mx=m_x, my=m_y)
+                elif (
+                    checkbox.pos.x < m_x < checkbox.pos.x + checkbox.width
+                    and checkbox.pos.y < m_y < checkbox.pos.y + checkbox.height
+                ):
+                    checkbox.toggle_checkbox()
             elif event.type == pg.KEYDOWN and event.key in key_numbers:
                 num = key_numbers.index(event.key) % 9 + 1
                 board.set_num(num=num)
