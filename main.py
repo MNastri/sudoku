@@ -37,14 +37,16 @@ class Difficulty(Enum):
 
 
 class Cell:
-    def __init__(self, pos, num, display, font):
+    def __init__(self, pos, num, display, font, solution):
         self.original = num != 0
         self.hovered = False  # TODO
         self.selected = False
+        self.check = check_enabled_at_beginning
         self.pos = Position(pos[0], pos[1])
         self.num = num
         self.display = display
         self.font = font
+        self.solution = solution
         self.set_rect()
         self.draw()
 
@@ -58,6 +60,8 @@ class Cell:
     def get_color(self):
         if self.original:
             return line_color
+        if self.num != 0 and self.check and (self.num != self.solution):
+            return wrong_number_color
         if self.num == 0 and self.hovered and self.selected:
             return empty_cell_hov_sel_color
         if self.num == 0 and self.hovered and not self.selected:
@@ -99,11 +103,12 @@ class Cell:
 
 
 class Board:
-    def __init__(self, board_cells, solution, display):
+    def __init__(self, display, solution, board_cells):
         self.display = display
-        self.cells = self.get_cells(board_cells=board_cells)
         self.solution = solution
+        self.cells = self.get_cells(board_cells=board_cells)
         self.selected_cell = None
+        self.check = check_enabled_at_beginning
 
     def draw_grid_lines(self):
         for ii in range(10):
@@ -130,7 +135,14 @@ class Board:
         cells = []
         for line_num, line in enumerate(board_cells):
             for col_num, num in enumerate(line):
-                cell = Cell((line_num, col_num), num, self.display, number_font)
+                solution = self.solution[line_num][col_num]
+                cell = Cell(
+                    pos=(line_num, col_num),
+                    num=num,
+                    display=self.display,
+                    font=number_font,
+                    solution=solution,
+                )
                 cells.append(cell)
         return cells
 
@@ -152,6 +164,7 @@ class Board:
     def update(self):
         for cell in self.cells:
             cell.clear_cell()
+            cell.check = board.check
             cell.draw()
 
 
@@ -174,6 +187,9 @@ scr_length = scr_pad * 2 + cell_length * 9
 line_color = (255, 255, 255)
 number_color = (127, 127, 127)
 bg_color = (30, 30, 30)
+
+check_enabled_at_beginning = False
+wrong_number_color = (127, 0, 0)
 
 empty_cell_unhov_unsel_color = bg_color
 empty_cell_unhov_sel_color = (0, 0, 127)
@@ -275,12 +291,12 @@ try:
         display=display,
         pos=(10, 10),
         font=text_font,
-        checked=False,
+        checked=check_enabled_at_beginning,
         caption="corrigir",
     )
     downloaded_board = _get_board(difficulty=Difficulty.HARD)
     solution = _get_solution(board=downloaded_board)
-    board = Board(board_cells=downloaded_board, solution=solution, display=display)
+    board = Board(display=display, solution=solution, board_cells=downloaded_board)
     board.draw_grid_lines()
     run = True
     while run:
@@ -300,6 +316,7 @@ try:
                     and checkbox.pos.y < m_y < checkbox.pos.y + checkbox.height
                 ):
                     checkbox.toggle_checkbox()
+                    board.check = not board.check
             elif event.type == pg.KEYDOWN and event.key in key_numbers:
                 num = key_numbers.index(event.key) % 9 + 1
                 board.set_num(num=num)
