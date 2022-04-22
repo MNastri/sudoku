@@ -220,18 +220,18 @@ class Checkbox:
         font,
         checked=False,
         caption="",
-        color=(127, 127, 127),
+        caption_color=(0, 0, 0),
         checked_color=(0, 127, 0),
-        font_size=font_size,
+        bg_color=bg_color,
     ):
         self.display = display
         self.pos = Location(pos[0], pos[1])
         self.font = font
         self.checked = checked
         self.caption = caption
-        self.color = color
+        self.color = caption_color
         self.checked_color = checked_color
-        self.font_size = font_size
+        self.bg_color = bg_color
         self.set_rect()
         _, _, self.width, self.height = self.rect
         self.draw()
@@ -242,6 +242,10 @@ class Checkbox:
 
     def set_rend(self):
         self.rend = self.font.render(self.caption, True, self.get_color())
+        temp_surface = self.font.render(self.caption, True, self.get_color())
+        temp_surface.fill(self.bg_color)
+        temp_surface.blit(self.rend, (0, 0))
+        self.rend = temp_surface
 
     def get_color(self):
         return self.checked_color if self.checked else self.color
